@@ -54,6 +54,10 @@ func init() {
 }
 
 func main() {
+	// Cosmetics
+	state.LastRebootTime = time.Now()
+	state.LastMessageTime = time.Now()
+
 	// Open GPIO
 	err := rpio.Open()
 	if err != nil {
@@ -95,7 +99,6 @@ func main() {
 		select {
 		case <-listener.Data():
 			state.LastMessageTime = time.Now()
-			log.Print("got packet")
 
 		case <-time.After(opt.MessageTimeout):
 			if time.Since(state.LastRebootTime) > opt.MinimumRebootInterval {
@@ -103,7 +106,7 @@ func main() {
 				log.Printf("REBOOT")
 				cycleRelay()
 			} else {
-				log.Printf("to soon to reboot")
+				log.Printf("packet timeout, but too soon to reboot")
 			}
 		}
 	}
@@ -113,8 +116,8 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	// Update state
-	state.LastRebootNumSecondsAgo = int(time.Since(state.LastRebootTime).Seconds())
-	state.LastMessageNumSecondsAgo = int(time.Since(state.LastMessageTime).Seconds())
+	state.LastRebootNumSecondsAgo = int(time.Since(state.LastRebootTime) / time.Second)
+	state.LastMessageNumSecondsAgo = int(time.Since(state.LastMessageTime) / time.Second)
 
 	jsonData, err := json.MarshalIndent(&state, "", "  ")
 	if err != nil {
@@ -126,7 +129,8 @@ func statusHandler(w http.ResponseWriter, r *http.Request) {
 
 func resetHandler(w http.ResponseWriter, r *http.Request) {
 	go cycleRelay()
-	http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
+	log.Printf("power cycle initiated from %s", r.RemoteAddr)
+	http.Redirect(w, r, "/", http.StatusFound)
 	fmt.Fprintf(w, "power cycle initiated, complete in %s", opt.GPIOHoldTime)
 }
 
