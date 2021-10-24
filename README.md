@@ -4,7 +4,7 @@ This is just a simple server that listens for messages from a Span device and po
 
 ## Deployment
 
-This runs on the host `relay` on the local network.  You can inspect the state at http://relay:8080/ and trigger a reboot of the connected device at http://relay:8080/reset
+This runs on the host `relay` on the local network.  You can inspect the state at <http://relay:8080/> and trigger a reboot of the connected device at <http://relay:8080/reset>
 
 ## Example
 

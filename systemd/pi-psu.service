@@ -1,0 +1,15 @@
+[Unit]
+	Description=PI PSU Gateway Resetter
+	After=network.target
+
+	StartLimitIntervalSec=10
+	StartLimitBurst=5
+
+	[Service]
+	ExecStart=/usr/local/bin/pi-psu
+	WorkingDirectory=/home/pi-psu
+	StandardOutput=syslog
+    StandardError=syslog
+	SyslogIdentifier=pi-psu
+	Group=pi-psu
+	Restart=on-failure

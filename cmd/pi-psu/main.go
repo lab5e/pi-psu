@@ -64,6 +64,7 @@ func main() {
 		log.Fatalf("error opening GPIO: %v", err)
 	}
 	defer rpio.Close()
+	log.Printf("confirmed access to GPIO")
 
 	pin = rpio.Pin(opt.GPIONum)
 
@@ -82,6 +83,7 @@ func main() {
 	}
 	go func() {
 		err := server.ListenAndServe()
+		log.Printf("http server on %s", server.Addr)
 		if err != http.ErrServerClosed {
 			log.Printf("http server error: %v", err)
 		}

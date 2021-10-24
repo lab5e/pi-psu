@@ -75,6 +75,7 @@ func (s *SpanListener) readLoop() {
 
 			continue
 		}
+		log.Printf("connected to Span")
 
 		// reception loop
 		for {
