@@ -37,6 +37,9 @@ vet:
 	@echo "*** vetting"
 	@go vet ./...
 
+install:
+	@sudo systemctl stop pi-psu.service && sudo cp bin/pi-psu /usr/local/bin/. && sudo systemctl start pi-psu.service
+
 staticcheck:
 	@staticcheck ./...
 
