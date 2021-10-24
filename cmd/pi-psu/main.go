@@ -104,7 +104,6 @@ func main() {
 
 		case <-time.After(opt.MessageTimeout):
 			if time.Since(state.LastRebootTime) > opt.MinimumRebootInterval {
-				state.LastRebootTime = time.Now()
 				log.Printf("REBOOT")
 				cycleRelay()
 			} else {
@@ -138,6 +137,7 @@ func resetHandler(w http.ResponseWriter, r *http.Request) {
 
 // cycle relay
 func cycleRelay() {
+	state.LastRebootTime = time.Now()
 	pin.High()
 	time.Sleep(opt.GPIOHoldTime)
 	pin.Low()
