@@ -9,9 +9,13 @@ clean:
 	@rm -rf pkg/apipb openapiv2
 	@go clean -testcache
 
-build: pi-psu
+build: pi-psu flip
 
 pi-psu:
+	@echo "*** building $@"
+	@cd cmd/$@ && go build -trimpath -o ../../bin/$@ -tags osusergo,netgo
+
+flip:
 	@echo "*** building $@"
 	@cd cmd/$@ && go build -trimpath -o ../../bin/$@ -tags osusergo,netgo
 
